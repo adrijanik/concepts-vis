@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.14.2/dist/bootstrap-table.min.css">
+
+
+<title>Interactive Concepts Discovery</title>
+
+<style>
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0 4px;
+}
+
+/* Create two equal columns that sits next to each other */
+.column {
+  flex: 50%;
+  padding: 0 4px;
+}
+
+.column img {
+  margin-top: 8px;
+  vertical-align: middle;
+}
+</style>
+<style>
+/* Style the header */
+header {
+  background-color: #666;
+  padding: 1px;
+  text-align: center;
+  font-size: 25px;
+  color: white;
+}
+
+/* Create two columns/boxes that floats next to each other */
+nav {
+  float: left;
+  width: 15%;
+  height: 100vh; /* only for demonstration, should be removed */
+  background: #fafafa;
+  padding: 20px;
+}
+
+/* Style the list inside the menu */
+nav ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+col2 {
+  float: left;
+  padding: 25px;
+  width: 30%;
+  background-color: #ffffff;
+}
+
+col1 {
+  float: left;
+  padding: 20px;
+  width: 55%;
+  background-color: #ffffff;
+}
+
+col3 {
+  float: left;
+  padding: 20px;
+  width: 27.5%;
+  background-color: #f1f1f1;
+}
+
+col4 {
+  float: left;
+  padding: 20px;
+  width: 27.5%;
+  background-color: #f1f1f1;
+}
+
+/* Clear floats after the columns */
+section:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* Style the footer */
+footer {
+  background-color: #777;
+  padding: 10px;
+  text-align: center;
+  color: white;
+}
+
+/* Responsive layout - makes the two columns/boxes stack on top of each other instead of next to each other, on small screens */
+@media (max-width: 600px) {
+  nav, article {
+    width: 100%;
+    height: auto;
+  }
+}
+</style>
+
+<style>
+.grid {
+   display: grid;
+   grid-gap: 10px;
+   grid-template-columns: repeat(auto-fill, minmax(64px,1fr));
+   grid-auto-rows: 64px;
+}
+.imgs {
+   border-radius: 3px;
+   padding: 0.5em;
+   background-color: #808080;
+}
+</style>
+<style>
+#myInput {
+  background-image: url('/css/searchicon.png');
+  background-position: 10px 10px;
+  background-repeat: no-repeat;
+  width: 100%;
+  font-size: 16px;
+  padding: 12px 20px 12px 40px;
+  border: 1px solid #ddd;
+  margin-bottom: 12px;
+}
+
+#checklist {
+  border-collapse: collapse;
+  width: 100%;
+  border: 1px solid #ddd;
+  font-size: 18px;
+}
+
+#checklist th, #checklist td {
+  text-align: left;
+  padding: 12px;
+}
+
+#checklist tr {
+  border-bottom: 1px solid #ddd;
+}
+
+#checklist tr.header, #checklist tr:hover {
+  background-color: #f1f1f1;
+}
+
+.scrollit {
+    overflow:scroll;
+    height:65vh;
+}
+</style>
+</head>
+
+<body>
+
+<header class="navbar-dark bg-dark static-top">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="" >Interactive Concepts Discovery</a>
+</div>
+</header>
+
+<nav>
+
+<h5>Class to test:</h5>
+<form onsubmit="return selectClass();"> 
+<input type="text" id="myInput" onkeyup="search()" placeholder="Search for class.." title="Type class name...">
+<div class="scrollit">
+<table id="checklist">
+</table>
+</div>
+  <input type="submit" value="Submit">
+</form>
+
+<div style="margin-top:30px;">
+  <input type="range" id="angle" name="angle"
+         min="1" max="5" onchange="updateAngle(this.value)">
+  <label for="angle">Angle [2-10]</label>
+</div>
+
+</nav>
+
+<col1 id="div_main"></col1>
+
+<col2 id="col2">
+</col2>
+
+<p id="valBox" style="display:none;">3</p>
+<script>
+function search() {
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("myInput");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("checklist");
+  tr = table.getElementsByTagName("tr");
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[0];
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }       
+  }
+}
+</script>
+<script>
+function updateAngle(newVal){
+  document.getElementById("valBox").innerHTML=newVal;
+}
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/5.10.3/math.min.js"></script>
+<script src="https://unpkg.com/bootstrap-table@1.14.2/dist/bootstrap-table.min.js"></script>
+<script src="https://d3js.org/d3.v5.min.js"></script>
+<script src="https://d3js.org/d3-selection-multi.v1.min.js"></script>
+<script src="d3-legend.min.js"></script>
+<script src="data/points.js"></script>
+<script src="data/heatmap.js"></script>
+<script src="scatter_funs.js"></script>
+<script src="scatter.js"></script>
+<script src="vendor/jquery/jquery.min.js"></script>
+<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>
