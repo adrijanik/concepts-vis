@@ -27,13 +27,13 @@ var scales = {
     .domain([min_y, max_y])
     .range([30, 865]),
   "color": d3.scaleSequential(d3.interpolateRdBu)
-    .domain([0,1])
+    .domain([-7691066.971433935, 10576951.857826188])
 };
 
 var ratio = 1;
 
 
-var groups = ["heatmap", "points", "masks", "preds", "patches", "svg-quant", "table"]
+var groups = ["points", "heatmap", "masks", "preds", "patches", "svg-quant", "table"]
 Svg.selectAll("g")
   .data(groups).enter()
   .append("g")
@@ -53,22 +53,54 @@ var legend = Svg.select("#svg-quant");
 
 legend.append("g")
   .attr("class", "legendLinear")
-  .attr("transform", "translate(132,900)");
+  .attr("transform", "translate(70,900)");
 
 const range = (start, stop, step = 1) => Array(Math.ceil((stop - start) / step)).fill(start).map((x, y) => x + y * step);
 
 var legendLinear = d3.legendColor()
-  .shapeWidth(35)
+  .shapeWidth(100)
   .shapeHeight(30)
-  .cells([0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0])
+  .cells([-46e5, -30e5, -16e5,
+         -6e4,  14e5,  3e6,
+        44e5,  74e5, 11e6])
   .orient('horizontal')
   .scale(scales.color);
+
+var x_axis = d3.axisBottom().scale(scales.x);
+
+var y_axis = d3.axisLeft().scale(scales.y);
+
+Svg.append("g")
+   .attr("transform", "translate(50, 10)")
+   .call(y_axis);
+
+var xAxisTranslate = 865 + 10;
+
+Svg.append("g")
+   .attr("transform", "translate(50, " + xAxisTranslate  +")")
+   .call(x_axis)
+
+// text label for the x axis
+Svg.append("text")             
+    .attr("transform",
+          "translate(" + 1200 + " ," + 
+                         (865 + 50) + ")")
+    .style("text-anchor", "middle")
+    .text("1st principal component");
+
+// text label for the y axis
+Svg.append("text")
+    .attr("transform", "rotate(-90)")
+    .attr("y", -5)
+    .attr("x",-150)
+    .attr("dy", "1em")
+    .style("text-anchor", "middle")
+    .text("2nd principal component");      
 
 legend.select(".legendLinear")
   .call(legendLinear);
 
-
-d3.json("data/classes.json").then(function(data) {
+d3.json("/data/classes.json").then(function(data) {
   var checklist = d3.select('#checklist').selectAll("input")
     .data(data)
     .enter()
@@ -337,13 +369,10 @@ function handleMouseOver(d, i) {  // Add interactivity
          }
    }
 
-  function stand(x, min, max) {
-    return (x-min)/(max-min);
-  }
   
   Svg.selectAll("circle")
   .filter(function(d) { return d.class == checkedValue })
-  .attr("fill", (d) =>  scales.color(math.multiply([stand(d.coords[0],min_x, max_x),stand(d.coords[1],min_y, max_y)],[stand(d.gradient[0],min_g0, max_g0),stand(d.gradient[1],min_g1, max_g1)])))
+  .attr("fill", (d) =>  scales.color(math.multiply([coords[0],coords[1]],[d.gradient[0],d.gradient[1]])))
   .attr("r", 10); 
 
 
