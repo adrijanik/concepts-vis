@@ -68,7 +68,7 @@ legend.select(".legendLinear")
   .call(legendLinear);
 
 
-d3.json("/data/classes.json").then(function(data) {
+d3.json("data/classes.json").then(function(data) {
   var checklist = d3.select('#checklist').selectAll("input")
     .data(data)
     .enter()
