@@ -100,18 +100,17 @@ Svg.append("text")
 legend.select(".legendLinear")
   .call(legendLinear);
 
-d3.json("/data/classes.json").then(function(data) {
   var checklist = d3.select('#checklist').selectAll("input")
-    .data(data)
+    .data(classes)
     .enter()
     .append('tr')
     .append('td')
     .append('label')
-        .text(function(d) {alert(d.class);  return d.class.split(',')[0]; })
+        .text(function(d) { return d.class.split(',')[0]; })
     .append("input")
     .attrs({ "type":"checkbox", "name":(d) => d.id, "value":(d) => d.class, "class":"check1"});
 
-});
+
 
 // draw the scatterplot points
 var points = points.selectAll("circle")
