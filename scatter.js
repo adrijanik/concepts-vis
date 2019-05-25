@@ -107,7 +107,7 @@ d3.json("/data/classes.json").then(function(data) {
     .append('tr')
     .append('td')
     .append('label')
-        .text(function(d) { return d.class.split(',')[0]; })
+        .text(function(d) {alert(d.class);  return d.class.split(',')[0]; })
     .append("input")
     .attrs({ "type":"checkbox", "name":(d) => d.id, "value":(d) => d.class, "class":"check1"});
 
