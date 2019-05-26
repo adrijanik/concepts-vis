@@ -290,7 +290,7 @@ function handleMouseOver(d, i) {  // Add interactivity
         .attr("x2", x2)
         .attr("y2", y2)
 	.attr("coords",coords)
-        .attr("stroke-width", 2)
+        .attr("stroke-width", 3)
         .attr("stroke", "black")
         .attr("id", "#t" + "-" + i)
         .attr("marker-end", "url(#triangle)");
@@ -301,9 +301,9 @@ function handleMouseOver(d, i) {  // Add interactivity
         .attr("x2", x4)
         .attr("y2", y4)
 	.attr("coords",coords)
-        .attr("stroke-width", 2)
-        .attr("stroke", "gray")
-        .style("stroke-dasharray", ("3, 3"))	
+        .attr("stroke-width", 3)
+        .attr("stroke", "red")
+        .style("stroke", ("3, 3"))	
         .attr("id", "#t_ort" + "-" + i);
 
      var angle =  document.getElementById("valBox").innerHTML * Math.PI/180;
@@ -319,9 +319,9 @@ function handleMouseOver(d, i) {  // Add interactivity
         .attr("x2", right_x)
         .attr("y2", right_y)
 	.attr("coords",coords)
-        .attr("stroke-width", 2)
-        .attr("stroke", "gray")
-        .style("stroke-dasharray", ("3, 3"))	
+        .attr("stroke-width", 3)
+        .attr("stroke", "red")
+        .style("stroke", ("3, 3"))	
         .attr("id", "#t_ang" + "-" + i);
  
      Svg.append("line")
@@ -330,9 +330,9 @@ function handleMouseOver(d, i) {  // Add interactivity
         .attr("x2", left_x)
         .attr("y2", left_y)
 	.attr("coords",coords)
-        .attr("stroke-width", 2)
-        .attr("stroke", "gray")
-        .style("stroke-dasharray", ("3, 3"))	
+        .attr("stroke-width", 3)
+        .attr("stroke", "red")
+        .style("stroke", ("3, 3"))	
         .attr("id", "#t_ang2" + "-" + i);
  
   var right_a = (y1 - right_y)/(x1 - right_x);
