@@ -9,14 +9,24 @@ var Svg = d3.select("#div_main")
 
 var index = 100;
 
-var min_g0 = -2935.449393712765;
-var min_g1 = -765.6401511302116;
-var max_g0 = -2935.4493522859743;
-var max_g1 = -765.6401444491758;
-var min_x = -3054.9271780362033;
-var max_x = 1953.187179198643;
-var min_y = -2101.9897178164883;
-var max_y = 2556.7949219460525;
+//var min_g0 = -2935.449393712765;
+//var min_g1 = -765.6401511302116;
+//var max_g0 = -2935.4493522859743;
+//var max_g1 = -765.6401444491758;
+//var min_x = -3054.9271780362033;
+//var max_x = 1953.187179198643;
+//var min_y = -2101.9897178164883;
+//var max_y = 2556.7949219460525;
+
+var min_g0 = -1023.8494681160053;
+var min_g1 = 614.194913941902;
+var max_g0 = -1023.8494346499896;
+var max_g1 = 614.1949715553254;
+var min_x = -1963.62291075628;
+var max_x = 3634.062084389748;
+var min_y = -2026.1730663284877;
+var max_y = 2804.8306800789014;
+
 
 
 var scales = {
@@ -30,7 +40,6 @@ var scales = {
     .domain([-7691066.971433935, 10576951.857826188])
 };
 
-var ratio = 1;
 
 
 var groups = ["points", "heatmap", "masks", "preds", "patches", "svg-quant", "table"]
@@ -68,17 +77,19 @@ var legendLinear = d3.legendColor()
 
 var x_axis = d3.axisBottom().scale(scales.x);
 
+var xAxisTranslate = 865 + 10;
+
+Svg.append("g")
+   .attr("transform", "translate(50," + xAxisTranslate  +")")
+   .call(x_axis)
+
+
+
 var y_axis = d3.axisLeft().scale(scales.y);
 
 Svg.append("g")
    .attr("transform", "translate(50, 10)")
    .call(y_axis);
-
-var xAxisTranslate = 865 + 10;
-
-Svg.append("g")
-   .attr("transform", "translate(50, " + xAxisTranslate  +")")
-   .call(x_axis)
 
 // text label for the x axis
 Svg.append("text")             
@@ -101,7 +112,7 @@ legend.select(".legendLinear")
   .call(legendLinear);
 
   var checklist = d3.select('#checklist').selectAll("input")
-    .data(classes)
+    .data(classes_short)
     .enter()
     .append('tr')
     .append('td')
@@ -119,7 +130,7 @@ var points = points.selectAll("circle")
   .append("circle")
   .attrs({
     "cy": (d) => scales.y(d.coords[1]),
-    "r": 4,
+    "r": 1,
     "fill": 'white',
     "stroke": "black",
     "stroke-width": 1,
@@ -188,11 +199,11 @@ function drawChart() {
 
   // Update the X scale 
   scales["x"].range([ 50, currentWidth]);
-  heatmap.attrs({"x": (d) => ratio*scales.x(d.coords[0]),
-    "width": ratio*scales.x(ux[1]) - ratio*scales.x(ux[0])
+  heatmap.attrs({"x": (d) => scales.x(d.coords[0]),
+    "width": scales.x(ux[1]) - scales.x(ux[0])
   })
 
-  points.attrs({"cx": (d) => ratio*scales.x(d.coords[0])})
+  points.attrs({"cx": (d) => scales.x(d.coords[0])})
   // allows interactivity with points
   Svg.selectAll("line").remove()
 
@@ -231,9 +242,9 @@ d3.selectAll("rect")
 function handleClick(d, i) {
    var coords = d3.mouse(this);
    var coords_o = d.coords;
-//    var x1 =  ratio*scales.x(min_x + (max_x - min_x)/2);
+//    var x1 =  scales.x(min_x + (max_x - min_x)/2);
 //    var y1 = scales.y(min_y + (max_y - min_y)/2);
-   var x1 =  ratio*scales.x(0);
+   var x1 =  scales.x(0);
    var y1 = scales.y(0);
 
 
@@ -268,12 +279,12 @@ function handleClick(d, i) {
 
 function handleMouseOver(d, i) {  // Add interactivity
     var coords = d.coords;
-//    var x1 =  ratio*scales.x(min_x + (max_x - min_x)/2);
+//    var x1 =  scales.x(min_x + (max_x - min_x)/2);
 //    var y1 = scales.y(min_y + (max_y - min_y)/2);
-    var x1 =  ratio*scales.x(0);
+    var x1 =  scales.x(0);
     var y1 = scales.y(0);
 
-    var x2 = ratio*scales.x(coords[0]);
+    var x2 = scales.x(coords[0]);
     var y2 = scales.y(coords[1]);
     var x3 = (y1-y2)/(x1-x2);
     var y3 = -1;
@@ -341,15 +352,15 @@ function handleMouseOver(d, i) {  // Add interactivity
   var R_2 = Math.pow(left_x-x1,2)+Math.pow(left_y-y1,2);
 
   var selected = points_data.filter(
-    d => Math.pow((ratio*scales.x(d.coords[0]) - x1),2) + Math.pow((scales.y(d.coords[1]) - y1),2) < R_2 && (
-         right_a * ratio*scales.x(d.coords[0]) + right_b >  scales.y(d.coords[1]) && left_a * ratio*scales.x(d.coords[0]) + left_b <= scales.y(d.coords[1]) && right_a < 0 && left_a < 0 && ratio*scales.x(d.coords[0]) > x1 && left_x < right_x ||
-         right_a * ratio*scales.x(d.coords[0]) + right_b <= scales.y(d.coords[1]) && left_a * ratio*scales.x(d.coords[0]) + left_b >  scales.y(d.coords[1]) && right_a > 0 && left_a > 0 && left_x < right_x ||
-         right_a * ratio*scales.x(d.coords[0]) + right_b <= scales.y(d.coords[1]) && left_a * ratio*scales.x(d.coords[0]) + left_b <= scales.y(d.coords[1]) && right_a < 0 && left_a > 0 && scales.y(d.coords[1]) > y1 && left_x > right_x || 
-         right_a * ratio*scales.x(d.coords[0]) + right_b >  scales.y(d.coords[1]) && left_a * ratio*scales.x(d.coords[0]) + left_b >  scales.y(d.coords[1]) && right_a < 0 && left_a > 0 && scales.y(d.coords[1]) < y1 && left_x < right_x || 
-         right_a * ratio*scales.x(d.coords[0]) + right_b >  scales.y(d.coords[1]) && left_a * ratio*scales.x(d.coords[0]) + left_b <= scales.y(d.coords[1]) && right_a > 0 && left_a > 0 && ratio*scales.x(d.coords[0]) > x1 && left_x > right_x ||
-         right_a * ratio*scales.x(d.coords[0]) + right_b <= scales.y(d.coords[1]) && left_a * ratio*scales.x(d.coords[0]) + left_b >  scales.y(d.coords[1]) && right_a < 0 && left_a < 0 && left_x > right_x ||
-         right_a * ratio*scales.x(d.coords[0]) + right_b <= scales.y(d.coords[1]) && left_a * ratio*scales.x(d.coords[0]) + left_b >  scales.y(d.coords[1]) && right_a > 0 && left_a < 0 && left_x < x1   || 
-         right_a * ratio*scales.x(d.coords[0]) + right_b >  scales.y(d.coords[1]) && left_a * ratio*scales.x(d.coords[0]) + left_b <= scales.y(d.coords[1]) && right_a > 0 && left_a < 0 && left_x > x1 )
+    d => Math.pow((scales.x(d.coords[0]) - x1),2) + Math.pow((scales.y(d.coords[1]) - y1),2) < R_2 && (
+         right_a * scales.x(d.coords[0]) + right_b >  scales.y(d.coords[1]) && left_a * scales.x(d.coords[0]) + left_b <= scales.y(d.coords[1]) && right_a < 0 && left_a < 0 && scales.x(d.coords[0]) > x1 && left_x < right_x ||
+         right_a * scales.x(d.coords[0]) + right_b <= scales.y(d.coords[1]) && left_a * scales.x(d.coords[0]) + left_b >  scales.y(d.coords[1]) && right_a > 0 && left_a > 0 && left_x < right_x ||
+         right_a * scales.x(d.coords[0]) + right_b <= scales.y(d.coords[1]) && left_a * scales.x(d.coords[0]) + left_b <= scales.y(d.coords[1]) && right_a < 0 && left_a > 0 && scales.y(d.coords[1]) > y1 && left_x > right_x || 
+         right_a * scales.x(d.coords[0]) + right_b >  scales.y(d.coords[1]) && left_a * scales.x(d.coords[0]) + left_b >  scales.y(d.coords[1]) && right_a < 0 && left_a > 0 && scales.y(d.coords[1]) < y1 && left_x < right_x || 
+         right_a * scales.x(d.coords[0]) + right_b >  scales.y(d.coords[1]) && left_a * scales.x(d.coords[0]) + left_b <= scales.y(d.coords[1]) && right_a > 0 && left_a > 0 && scales.x(d.coords[0]) > x1 && left_x > right_x ||
+         right_a * scales.x(d.coords[0]) + right_b <= scales.y(d.coords[1]) && left_a * scales.x(d.coords[0]) + left_b >  scales.y(d.coords[1]) && right_a < 0 && left_a < 0 && left_x > right_x ||
+         right_a * scales.x(d.coords[0]) + right_b <= scales.y(d.coords[1]) && left_a * scales.x(d.coords[0]) + left_b >  scales.y(d.coords[1]) && right_a > 0 && left_a < 0 && left_x < x1   || 
+         right_a * scales.x(d.coords[0]) + right_b >  scales.y(d.coords[1]) && left_a * scales.x(d.coords[0]) + left_b <= scales.y(d.coords[1]) && right_a > 0 && left_a < 0 && left_x > x1 )
   );
 
 
@@ -408,7 +419,7 @@ function handleMouseOut(d, i) {
       Svg.selectAll("circle")
       .filter(function(d) { return d.class != checkedValue })
       .attr("fill", "white")
-      .attr("r", 4);
+      .attr("r", 1);
 
 }
 
