@@ -9,15 +9,6 @@ var Svg = d3.select("#div_main")
 
 var index = 100;
 
-//var min_g0 = -2935.449393712765;
-//var min_g1 = -765.6401511302116;
-//var max_g0 = -2935.4493522859743;
-//var max_g1 = -765.6401444491758;
-//var min_x = -3054.9271780362033;
-//var max_x = 1953.187179198643;
-//var min_y = -2101.9897178164883;
-//var max_y = 2556.7949219460525;
-
 var min_g0 = -1023.8494681160053;
 var min_g1 = 614.194913941902;
 var max_g0 = -1023.8494346499896;
@@ -363,6 +354,7 @@ function handleMouseOver(d, i) {  // Add interactivity
          right_a * scales.x(d.coords[0]) + right_b >  scales.y(d.coords[1]) && left_a * scales.x(d.coords[0]) + left_b <= scales.y(d.coords[1]) && right_a > 0 && left_a < 0 && left_x > x1 )
   );
 
+//  var sample = _.sample(selected, _.random(200));
 
   var mapped = selected.map((k) => k.id);
   Svg.selectAll("circle")
