@@ -1,3 +1,3 @@
 # concepts-vis
 
-![Alt text](concept-vis.png?raw=true "Concept Vis")
+![Alt text](concept-vis.gif?raw=true "Concept Vis")
